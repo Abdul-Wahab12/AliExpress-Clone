@@ -35,6 +35,26 @@
                     </div>
 
                     <div class="border-b"/>
+
+                    <div class="flex items-center justify-start gap-2 my-2">
+                        <div class="text-xl font-bold">{{ priceComputed }}</div>
+                        <span class="bg-[#f5f5f5] border text-[#C08562] text-[9px] font-semibold px-1 rounded-sm">70% off</span>
+                    </div>
+
+                    <p class="text-[#009A66] text-xs font-semibold pt-1">
+                        Free 11-day delivery over £8.25
+                    </p>
+
+                    <div class="py-2"/>
+
+                    <button
+                        @click="addToCart()"
+                        :disabled="isInCart"
+                        class="px-5 py-2 rounded-lg text-white text-lg font-semibold bg-gradient-to-r from-[#FF851A] to-[#FFAC2C]"
+                    >
+                        <div v-if="isInCart">Is Added</div>
+                        <div v-else>Add to Cart</div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -42,7 +62,12 @@
 </template>
 
 <script setup>
+import { useUserStore } from "~/stores/user";
 import MainLayout from "~/layouts/MainLayout.vue";
+
+
+const userStore = useUserStore();
+const route = useRoute();
 
 const currentImage = ref(null);
 const images = ref([
@@ -53,6 +78,24 @@ const images = ref([
     "https://picsum.photos/id/99/800/800",
     "https://picsum.photos/id/144/800/800",
 ]);
+
+const isInCart = computed(() => {
+    let res = false;
+    userStore.cart.forEach(prod => {
+        if(route.params.id == prod.id) {
+            res = true
+        }
+    })
+    return res
+})
+
+const priceComputed = computed(() => {
+    return '26.40'
+})
+
+const addToCart = () => {
+    alert('Added');
+}
 
 onMounted(() => {
     watchEffect(() => {
